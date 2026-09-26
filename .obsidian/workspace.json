@@ -1,0 +1,368 @@
+{
+  "main": {
+    "id": "2288e65b116c4a5b",
+    "type": "split",
+    "children": [
+      {
+        "id": "572dd9f981e68666",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ad8e2adbb9827a2d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "python/01_fundamentals/01.3_numbers.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "01.3_numbers"
+            }
+          },
+          {
+            "id": "1e04ef969ca792a5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Numpy/0.4 arithmetic.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.4 arithmetic"
+            }
+          },
+          {
+            "id": "430f4cb7e2fafc8c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Numpy/0.4 arithmetic.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.4 arithmetic"
+            }
+          },
+          {
+            "id": "68dbab10396ca87f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Numpy/0.5 broadcasting.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.5 broadcasting"
+            }
+          },
+          {
+            "id": "9273b53b4905f63f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Numpy/0.2 Numpy arrays.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.2 Numpy arrays"
+            }
+          },
+          {
+            "id": "30436c57af1f057a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "MOC.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "MOC"
+            }
+          },
+          {
+            "id": "2a6a5290a3cbdfea",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "python/03_control-flow/03.2_loops.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "03.2_loops"
+            }
+          },
+          {
+            "id": "847d6f535bda07a4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "python/02_collections/02.6_slicing-indexing.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "02.6_slicing-indexing"
+            }
+          }
+        ],
+        "currentTab": 5
+      },
+      {
+        "id": "18d19e830b08035e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ffefe19c8f94c753",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ML_Roadmap_Tech_With_Tim.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ML_Roadmap_Tech_With_Tim"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0d87887f75e46e87",
+    "type": "split",
+    "children": [
+      {
+        "id": "aa3f6bd792641a07",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "04ed5df7a4cd8220",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "107f0eeef275c798",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "ce65304b9c431700",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "51f75b1fd2f6cb25",
+    "type": "split",
+    "children": [
+      {
+        "id": "e2623c74858ad2e9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3894d350135dd09a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "tasks.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "33281944a6eef632",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "tasks.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "0ad72ce0e1e6ae34",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "547c9afd705ca6b5",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "32adc10762ebf0da",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "tasks.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          },
+          {
+            "id": "19a13c4b2ce25403",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "obsidian-excalidraw-plugin:New drawing": false
+    }
+  },
+  "active": "30436c57af1f057a",
+  "lastOpenFiles": [
+    "tasks.md",
+    "seaborn_demo.png",
+    "Numpy/1.0 Shape operations.md",
+    "Untitled 4.md",
+    "Untitled 3.md",
+    "Untitled 2.md",
+    "Untitled.md",
+    "ML_Roadmap_Tech_With_Tim.md",
+    "MOC.md",
+    "python/01_fundamentals/01.3_numbers.md",
+    "demo_plot.png",
+    "heatmap_demo.png",
+    "pandas",
+    "Numpy/0.9 Dtypes + astype.md",
+    "Numpy/0.8 random.md",
+    "Numpy/0.9 dtypes + astype.md",
+    "Numpy/0.7 filtering.md",
+    "Numpy/0.6 aggregate functions.md",
+    "Numpy/0.2 Numpy arrays.md",
+    "Numpy/0.5 broadcasting.md",
+    "Numpy/0.4 arithmetic.md",
+    "Numpy/0.3 Slicing.md",
+    "Numpy/0.1 intro to Numpy.md",
+    "assets/heatmap_demo.png",
+    "python/10_oop-basics/10.4_encapsulation-naming.md",
+    "python/12_inheritance-polymorphism/12.6_protocols-structural-typing.md",
+    "python/13_advanced-oop/13.02_object-creation-new-init.md",
+    "python/13_advanced-oop/13.01_magic-methods-overview.md",
+    "assets/vault_graph_preview.png",
+    "assets/seaborn_demo.png",
+    "assets/numpy_slicing_visual.png",
+    "python/README.md",
+    "python/00_intro/00.4_pep8-tooling.md",
+    "assets/demo_plot.png",
+    "assets",
+    "assets/ChatGPT Image Sep 25, 2026, 11_08_18 AM.png",
+    "python/13_advanced-oop",
+    "python/12_inheritance-polymorphism",
+    "python/11_oop-design",
+    "python/10_oop-basics",
+    "python/09_advanced",
+    "python/08_iteration",
+    "python/07_files-io",
+    "python/06_exceptions"
+  ]
+}

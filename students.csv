@@ -1,0 +1,5 @@
+name,age,score,city,age_group
+Alice,25,90.0,Paris,Young
+Bob,30,85.0,London,Senior
+Charlie,22,,Paris,Young
+David,35,88.0,Berlin,Senior
