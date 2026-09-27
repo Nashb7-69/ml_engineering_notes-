@@ -26,7 +26,7 @@
   - [x] Dot product, matrix multiplication (`@`, `np.dot`), transpose, `np.random`
 - [ ] **1.5 Pandas - Data Manipulation**
   - [ ] `pd.Series` and `pd.DataFrame` creation and inspection (`.head()`, `.info()`, `.describe()`)
-  - [ ] Indexing: `loc` vs `iloc`, conditional filtering
+  - [x] Indexing: `loc` vs `iloc`, conditional filtering
   - [ ] Handling missing data: `isnull()`, `dropna()`, `fillna()`
   - [ ] `groupby()`, `merge/join/concat`, `pivot_table`, `apply()` and `value_counts()`
   - [ ] Reading/writing data: `read_csv()`, `read_excel()`, `to_csv()`

@@ -83,12 +83,40 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "MOC.md",
+                "file": "tasks.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "MOC"
+              "title": "tasks"
+            }
+          },
+          {
+            "id": "f7d0efd270d42254",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "pandas/0.2 pandas series.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.2 pandas series"
+            }
+          },
+          {
+            "id": "f1e604a45adcc61d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "pandas/0.3 DataFrame.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "0.3 DataFrame"
             }
           },
           {
@@ -120,7 +148,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 2
       },
       {
         "id": "18d19e830b08035e",
@@ -174,7 +202,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "dictionary",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -318,17 +346,23 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "30436c57af1f057a",
+  "active": "430f4cb7e2fafc8c",
   "lastOpenFiles": [
+    "pandas/0.3 DataFrame.md",
+    "ML_Roadmap_Tech_With_Tim.md",
+    "pandas/0.1 intro-to-pandas.md",
+    "Untitled.md",
+    "pandas/0.2 pandas series.md",
+    "python/README.md",
+    "Numpy/README.md",
+    "Numpy/0.10 Shape operations.md",
     "tasks.md",
-    "seaborn_demo.png",
     "Numpy/1.0 Shape operations.md",
+    "MOC.md",
+    "seaborn_demo.png",
     "Untitled 4.md",
     "Untitled 3.md",
     "Untitled 2.md",
-    "Untitled.md",
-    "ML_Roadmap_Tech_With_Tim.md",
-    "MOC.md",
     "python/01_fundamentals/01.3_numbers.md",
     "demo_plot.png",
     "heatmap_demo.png",
@@ -345,14 +379,9 @@
     "Numpy/0.1 intro to Numpy.md",
     "assets/heatmap_demo.png",
     "python/10_oop-basics/10.4_encapsulation-naming.md",
-    "python/12_inheritance-polymorphism/12.6_protocols-structural-typing.md",
-    "python/13_advanced-oop/13.02_object-creation-new-init.md",
-    "python/13_advanced-oop/13.01_magic-methods-overview.md",
     "assets/vault_graph_preview.png",
     "assets/seaborn_demo.png",
     "assets/numpy_slicing_visual.png",
-    "python/README.md",
-    "python/00_intro/00.4_pep8-tooling.md",
     "assets/demo_plot.png",
     "assets",
     "assets/ChatGPT Image Sep 25, 2026, 11_08_18 AM.png",
