@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2: Loading & Inspecting Data — pandas for ML</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <nav class="lesson-nav">
+    <a href="0001-dataframe-fundamentals.html">← Previous: DataFrame Fundamentals</a>
+    <a href="0003-dtypes-missing.html">Next: Dtypes & Missing Data →</a>
+  </nav>
+
+  <h1>Lesson 2: Loading & Inspecting Data</h1>
+
+  <p class="callout"><strong>Mission context:</strong> Real ML projects start with raw files — CSVs, Parquet, databases. You need to load them efficiently, diagnose problems immediately, and verify the data matches your expectations before any modeling.</p>
+
+  <h2>The ML Data Loading Workflow</h2>
+
+  <pre><code># 1. Load with intentional dtypes & parsing
+df = pd.read_csv("data/train.csv",
+    dtype={"id": "int32", "category": "category"},
+    parse_dates=["timestamp"],
+    na_values=["NA", "N/A", "missing", ""],
+    low_memory=False
+)
+
+# 2. Immediate diagnosis
+df.info()           # ← ALWAYS RUN THIS FIRST
+df.head()
+df.describe(include="all")
+
+# 3. Verify assumptions
+assert df.shape == (expected_rows, expected_cols)
+assert df["target"].notna().all()
+assert set(df.columns) == expected_columns</code></pre>
+
+  <h2>Reading Common ML Formats</h2>
+
+  <h3>CSV — The Universal Interchange</h3>
+
+  <pre><code># Basic
+df = pd.read_csv("data.csv")
+
+# Production-grade for ML
+df = pd.read_csv("data/train.csv",
+    # Performance
+    dtype={"id": "int32", "cat_col": "category", "price": "float32"},
+    low_memory=False,
+
+    # Parsing
+    parse_dates=["created_at", "updated_at"],
+    date_format="%Y-%m-%d %H:%M:%S",  # Faster than inference
+
+    # Missing values
+    na_values=["NA", "N/A", "null", "NULL", "missing", "", " "],
+    keep_default_na=True,
+
+    # Sampling for exploration
+    nrows=10000  # Quick peek without loading all
+)</code></pre>
+
+  <div class="callout callout-success">
+    <h4>✅ Pro Tip: Specify <code>dtype</code> Upfront</h4>
+    <p>Without <code>dtype</code>, pandas infers types row-by-row (slow) and may guess wrong (e.g., integers with one NaN become <code>float64</code>). Explicit dtypes: faster load, correct types, less memory.</p>
+  </div>
+
+  <h3>Parquet — The ML Default</h3>
+
+  <pre><code># Fast, columnar, preserves dtypes exactly
+df = pd.read_parquet("data/train.parquet")
+
+# Read only needed columns (huge speedup on wide data)
+df = pd.read_parquet("data/train.parquet",
+    columns=["feature_1", "feature_2", "target"])
+
+# Partition pruning (if data is partitioned by date/category)
+df = pd.read_parquet("data/train.parquet",
+    filters=[("date", ">=", "2024-01-01"), ("category", "in", ["A", "B"])])
+</code></pre>
+
+  <div class="callout">
+    <h4>💡 Why Parquet for ML?</h4>
+    <ul>
+      <li>10-100x faster reads than CSV</li>
+      <li>Preserves dtypes exactly (no inference)</li>
+      <li>Column pruning — read only what you need</li>
+      <li>Partition pruning — skip irrelevant files</li>
+      <li>Compressed by default (snappy/zstd)</li>
+    </ul>
+  </div>
+
+  <h3>SQL — When Data Lives in a Database</h3>
+
+  <pre><code>from sqlalchemy import create_engine
+
+engine = create_engine("postgresql://user:pass@host/db")
+
+# Push computation to DB where possible
+df = pd.read_sql("""
+    SELECT user_id, COUNT(*) as order_count, SUM(amount) as total_spent
+    FROM orders
+    WHERE created_at >= '2024-01-01'
+    GROUP BY user_id
+""", engine)
+
+# Parameterized queries (safe, reusable)
+df = pd.read_sql("SELECT * FROM users WHERE country = %s", engine, params=("US",))
+
+# Chunked for large result sets
+for chunk in pd.read_sql("SELECT * FROM huge_table", engine, chunksize=50000):
+    process(chunk)
+</code></pre>
+
+  <h2>The Diagnostic Trinity: <code>info()</code>, <code>head()</code>, <code>describe()</code></h2>
+
+  <h3>1. <code>df.info()</code> — Your Dashboard</h3>
+
+  <pre><code>>>> df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 12 columns):
+ #   Column       Non-Null Count  Dtype
+---  ------       --------------  -----
+ 0   PassengerId  891 non-null    int64
+ 1   Survived     891 non-null    int64
+ 2   Pclass       891 non-null    int64
+ 3   Name         891 non-null    object
+ 4   Sex          891 non-null    object
+ 5   Age          714 non-null    float64   ← 177 missing!
+ 6   SibSp        891 non-null    int64
+ 7   Parch        891 non-null    int64
+ 8   Ticket       891 non-null    object
+ 9   Fare         891 non-null    float64
+ 10  Cabin        204 non-null    object    ← 687 missing!
+ 11  Embarked     889 non-null    object    ← 2 missing
+dtypes: float64(2), int64(5), object(5)
+memory usage: 83.6+ KB</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Signal</th><th>What It Means</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Non-null < total rows</td><td>Missing values</td><td>Plan imputation/dropping</td></tr>
+      <tr><td>Numeric column as <code>object</code></td><td>Strings mixed in (e.g., "N/A")</td><td>Fix with <code>pd.to_numeric(errors='coerce')</code></td></tr>
+      <tr><td>High cardinality <code>object</code></td><td>Free text, IDs, or messy categorical</td><td>Encode or drop</td></tr>
+      <tr><td>Memory usage high</td><td>Many object columns</td><td>Convert to <code>category</code> or <code>string</code></td></tr>
+      <tr><td><code>+ KB</code> in memory</td><td>Object columns not measured</td><td>Use <code>memory_usage(deep=True)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>2. <code>df.head()</code> / <code>df.sample()</code> — Spot Check</h3>
+
+  <pre><code>df.head(10)           # First rows (check sorting, headers)
+df.tail(5)            # Last rows (check for trailing garbage)
+df.sample(5, random_state=42)  # Random rows (representative check)</code></pre>
+
+  <h3>3. <code>df.describe()</code> — Distribution Sanity Check</h3>
+
+  <pre><code>>>> df.describe()
+           Age        Fare
+count  714.000000  891.000000
+mean    29.699118   32.204208
+std     14.526497   49.693429
+min      0.420000    0.000000  ← 0 fare? Possible data issue
+25%     20.125000    7.910400
+50%     28.000000   14.454200
+75%     38.000000   31.000000
+max     80.000000  512.329200  ← Outlier?
+
+# For categorical/string columns:
+df.describe(include="object")
+# Or all:
+df.describe(include="all")</code></pre>
+
+  <div class="callout callout-warning">
+    <h4>⚠ <code>describe()</code> Only Shows Numeric by Default</h4>
+    <p>Always run <code>df.describe(include="all")</code> or <code>df.describe(include="object")</code> to see categorical distributions (unique count, top, freq).</p>
+  </div>
+
+  <h2>ML-Specific Inspection Checklist</h2>
+
+  <div class="quiz" id="quiz1">
+    <div class="quiz-question">You load a dataset and <code>df.info()</code> shows a numeric column as <code>object</code> dtype with 95% non-null. What's the most likely cause?</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q1" value="a"> The column is actually categorical</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="b"> A few rows contain non-numeric strings like "N/A" or "missing"</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="c"> The column has too many unique values</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="d"> Pandas bug</label>
+    </div>
+    <div class="quiz-feedback" id="fb1"></div>
+  </div>
+
+  <div class="quiz" id="quiz2">
+    <div class="quiz-question">For a 10GB CSV file, which approach is fastest for initial exploration?</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q2" value="a"> <code>pd.read_csv("huge.csv")</code> then <code>df.info()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="b"> <code>pd.read_csv("huge.csv", nrows=1000)</code> then <code>df.info()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="c"> <code>pd.read_parquet("huge.parquet")</code> then <code>df.info()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="d"> Convert to Parquet first, then read</label>
+    </div>
+    <div class="quiz-feedback" id="fb2"></div>
+  </div>
+
+  <div class="quiz" id="quiz3">
+    <div class="quiz-question">You see <code>memory usage: 83.6+ KB</code> (with <code>+</code>). What does the <code>+</code> mean?</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q3" value="a"> Memory is compressed</label>
+      <label class="quiz-option"><input type="radio" name="q3" value="b"> Object columns' memory not fully counted</label>
+      <label class="quiz-option"><input type="radio" name="q3" value="c"> Index memory not included</label>
+      <label class="quiz-option"><input type="radio" name="q3" value="d"> DataFrame has duplicate columns</label>
+    </div>
+    <div class="quiz-feedback" id="fb3"></div>
+  </div>
+
+  <h2>Hands-On Exercise</h2>
+
+  <p>Use the built-in seaborn dataset (no download needed):</p>
+
+  <pre><code>import pandas as pd
+import seaborn as sns
+
+# Load a classic ML dataset
+df = sns.load_dataset("penguins")  # 344 rows, 7 columns
+
+# 1. Run the diagnostic trinity
+print("=== INFO ===")
+df.info()
+
+print("\n=== HEAD ===")
+print(df.head())
+
+print("\n=== DESCRIBE (all) ===")
+print(df.describe(include="all"))
+
+# 2. Answer these questions:
+# - How many missing values in each column?
+# - Which columns are numeric vs categorical?
+# - Any surprising values in the numeric summary?
+# - What's the target variable for classification?
+
+# 3. Check class balance
+print("\n=== TARGET DISTRIBUTION ===")
+print(df["species"].value_counts())</code></pre>
+
+  <h2>Key Takeaways</h2>
+
+  <ol>
+    <li><strong>Always run <code>df.info()</code> first</strong> — it's your diagnostic dashboard</li>
+    <li><strong>Specify <code>dtype</code> and <code>parse_dates</code> in <code>read_csv</code></strong> — faster, correct types, less memory</li>
+    <li><strong>Prefer Parquet</strong> for ML workflows — faster, preserves dtypes, column pruning</li>
+    <li><strong>Check <code>describe(include="all")</code></strong> — numeric <em>and</em> categorical distributions</li>
+    <li><strong>Verify assumptions with assertions</strong> — catch data drift early</li>
+  </ol>
+
+  <h2>Reference Links</h2>
+  <a href="../reference/02-creation-methods.md" class="reference-link">Creation Methods Ref</a>
+  <a href="../reference/05-io-tools.md" class="reference-link">IO Tools Deep Dive</a>
+  <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html" class="reference-link" target="_blank">read_csv API</a>
+  <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html" class="reference-link" target="_blank">read_parquet API</a>
+
+  <div class="teacher-reminder">
+    <p><strong>Stuck? Confused?</strong> Ask me anything — I'm your teacher. Want to go deeper on any concept, see more examples, or try a variation of the exercise? Just say the word.</p>
+  </div>
+
+  <script>
+    function setupQuiz(quizId, feedbackId, correctAnswer, explanation) {
+      const quiz = document.getElementById(quizId);
+      const feedback = document.getElementById(feedbackId);
+      const options = quiz.querySelectorAll('.quiz-option');
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const input = opt.querySelector('input');
+          input.checked = true;
+          const selected = input.value;
+          options.forEach(o => o.classList.remove('correct', 'incorrect'));
+          if (selected === correctAnswer) {
+            opt.classList.add('correct');
+            feedback.className = 'quiz-feedback show correct';
+            feedback.innerHTML = `<strong>Correct!</strong> ${explanation}`;
+          } else {
+            opt.classList.add('incorrect');
+            feedback.className = 'quiz-feedback show incorrect';
+            feedback.innerHTML = `<strong>Not quite.</strong> ${explanation}`;
+          }
+        });
+      });
+    }
+
+    setupQuiz('quiz1', 'fb1', 'b',
+      'When pandas sees non-numeric strings in a mostly-numeric column, it falls back to <code>object</code> dtype. Fix with <code>pd.to_numeric(df[col], errors="coerce")</code> which converts invalid values to NaN.');
+
+    setupQuiz('quiz2', 'fb2', 'b',
+      'Reading the full 10GB CSV loads everything into memory. <code>nrows=1000</code> gives you a quick sample for exploration. Better yet, convert to Parquet once, then use column/partition pruning.');
+
+    setupQuiz('quiz3', 'fb3', 'b',
+      'The <code>+</code> means object columns (strings, Python objects) are estimated, not deeply measured. Run <code>df.memory_usage(deep=True)</code> for accurate per-column memory.');
+  </script>
+</body>
+</html>

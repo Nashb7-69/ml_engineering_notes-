@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1: DataFrame Fundamentals — pandas for ML</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <nav class="lesson-nav">
+    <span>Lesson 1 of N</span>
+    <a href="0002-loading-inspecting.html">Next: Loading & Inspecting Data →</a>
+  </nav>
+
+  <h1>Lesson 1: DataFrame Fundamentals</h1>
+
+  <p class="callout"><strong>Mission context:</strong> Before we can clean data for ML, we need to understand what a DataFrame <em>is</em> — its anatomy, how it differs from NumPy arrays, and why its design matters for ML pipelines.</p>
+
+  <h2>What Is a DataFrame?</h2>
+
+  <p>A <strong>DataFrame</strong> is a <em>two-dimensional, size-mutable, tabular data structure with labeled axes (rows and columns)</em>. Think of it as:</p>
+
+  <ul>
+    <li>A spreadsheet in memory</li>
+    <li>A SQL table you can manipulate with Python</li>
+    <li>A <strong>dict of Series</strong> sharing the same index</li>
+    <li>A <strong>collection of columns</strong>, each a 1D NumPy array, aligned by a shared row index</li>
+  </ul>
+
+  <div class="callout callout-success">
+    <h4>Mental Model for ML</h4>
+    <p>Each <strong>row</strong> = one observation (sample). Each <strong>column</strong> = one feature (or target). This maps directly to <code>X</code> (features) and <code>y</code> (target) in scikit-learn.</p>
+  </div>
+
+  <h2>Anatomy of a DataFrame</h2>
+
+  <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    "age": [25, 32, 47, 51],
+    "income": [50000, 80000, 120000, 95000],
+    "city": ["NYC", "LA", "Chicago", "Boston"]
+})
+
+print(df)
+#    age  income     city
+# 0   25   50000      NYC
+# 1   32   80000       LA
+# 2   47  120000  Chicago
+# 3   51   95000   Boston</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Access</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Values</strong></td><td><code>df.values</code> or <code>df.to_numpy()</code></td><td>Underlying NumPy array (2D). May be multiple arrays if mixed dtypes.</td></tr>
+      <tr><td><strong>Index</strong></td><td><code>df.index</code></td><td>Row labels (default: <code>RangeIndex</code>).</td></tr>
+      <tr><td><strong>Columns</strong></td><td><code>df.columns</code></td><td>Column labels (an <code>Index</code> object).</td></tr>
+      <tr><td><code>dtypes</code></td><td><code>df.dtypes</code></td><td>Series mapping column → dtype.</td></tr>
+      <tr><td><code>shape</code></td><td><code>df.shape</code></td><td>Tuple <code>(n_rows, n_cols)</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Creating DataFrames: The ML-Relevant Ways</h2>
+
+  <h3>1. From a dict of lists (column-oriented)</h3>
+  <pre><code>data = {
+    "feature_1": [1.2, 3.4, 2.1],
+    "feature_2": [0, 1, 0],
+    "target":    [10, 20, 15]
+}
+df = pd.DataFrame(data)</code></pre>
+
+  <h3>2. From a list of dicts (row-oriented)</h3>
+  <pre><code>records = [
+    {"feature_1": 1.2, "feature_2": 0, "target": 10},
+    {"feature_1": 3.4, "feature_2": 1, "target": 20},
+]
+df = pd.DataFrame(records)</code></pre>
+
+  <h3>3. From NumPy arrays (when you have raw matrices)</h3>
+  <pre><code>X = np.array([[1.2, 0], [3.4, 1], [2.1, 0]])
+y = np.array([10, 20, 15])
+
+df = pd.DataFrame(X, columns=["feat_1", "feat_2"])
+df["target"] = y</code></pre>
+
+  <div class="callout callout-warning">
+    <h4>⚠ Column Order Matters</h4>
+    <p>In Python < 3.7, dicts weren't ordered. Always pass <code>columns=[...]</code> explicitly when creating from NumPy arrays or when column order matters for your ML pipeline.</p>
+  </div>
+
+  <h2>DataFrame vs. NumPy Array: Why Both Exist</h2>
+
+  <table>
+    <thead>
+      <tr><th>Aspect</th><th>NumPy Array</th><th>pandas DataFrame</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dimensions</td><td>N-dimensional</td><td>Strictly 2D</td></tr>
+      <tr><td>Dtypes</td><td>Homogeneous (one dtype)</td><td>Heterogeneous per column</td></tr>
+      <tr><td>Labels</td><td>Integer positions only</td><td>Named index + columns</td></tr>
+      <tr><td>Missing data</td><td>No native support</td><td><code>NaN</code> / <code>NA</code> first-class</td></tr>
+      <tr><td>Alignment</td><td>Manual</td><td>Automatic on index</td></tr>
+      <tr><td>ML role</td><td>Model input (<code>X</code>, <code>y</code>)</td><td>Preprocessing, EDA, feature engineering</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Workflow:</strong> Load → Clean/Transform in pandas → <code>.to_numpy()</code> or <code>.values</code> → Feed to model.</p>
+
+  <h2>Essential Inspection Methods</h2>
+
+  <pre><code>df.head(3)        # First 3 rows
+df.tail(2)        # Last 2 rows
+df.info()         # Columns, non-null counts, dtypes, memory
+df.describe()     # Summary stats for numeric columns
+df.describe(include="all")  # Include object/categorical
+df.shape          # (rows, cols)
+df.columns        # Column names (Index object)
+df.dtypes         # Dtype per column
+df.index          # Row index</code></pre>
+
+  <div class="callout">
+    <h4>💡 ML Tip: <code>df.info()</code> First</h4>
+    <p>Always run <code>df.info()</code> on new data. It reveals: missing values (non-null count), wrong dtypes (e.g., numbers read as <code>object</code>), and memory usage — all critical before modeling.</p>
+  </div>
+
+  <h2>Quiz: Check Your Understanding</h2>
+
+  <div class="quiz" id="quiz1">
+    <div class="quiz-question">1. A DataFrame column is internally stored as:</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q1" value="a"> A Python list</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="b"> A NumPy 1D array (Series)</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="c"> A dictionary</label>
+      <label class="quiz-option"><input type="radio" name="q1" value="d"> A linked list</label>
+    </div>
+    <div class="quiz-feedback" id="fb1"></div>
+  </div>
+
+  <div class="quiz" id="quiz2">
+    <div class="quiz-question">2. Which method shows non-null counts and dtypes for all columns?</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q2" value="a"> <code>df.describe()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="b"> <code>df.summary()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="c"> <code>df.info()</code></label>
+      <label class="quiz-option"><input type="radio" name="q2" value="d"> <code>df.stats()</code></label>
+    </div>
+    <div class="quiz-feedback" id="fb2"></div>
+  </div>
+
+  <div class="quiz" id="quiz3">
+    <div class="quiz-question">3. When converting a DataFrame to NumPy for scikit-learn, which is preferred?</div>
+    <div class="quiz-options">
+      <label class="quiz-option"><input type="radio" name="q3" value="a"> <code>df.values</code></label>
+      <label class="quiz-option"><input type="radio" name="q3" value="b"> <code>df.to_numpy()</code></label>
+      <label class="quiz-option"><input type="radio" name="q3" value="c"> <code>np.array(df)</code></label>
+      <label class="quiz-option"><input type="radio" name="q3" value="d"> They're all identical</label>
+    </div>
+    <div class="quiz-feedback" id="fb3"></div>
+  </div>
+
+  <h2>Hands-On Exercise</h2>
+
+  <p>Open a Python REPL or Jupyter notebook and run:</p>
+
+  <pre><code>import pandas as pd
+import numpy as np
+
+# 1. Create a DataFrame from this dict
+data = {
+    "sepal_length": [5.1, 4.9, 4.7, 4.6, 5.0],
+    "sepal_width":  [3.5, 3.0, 3.2, 3.1, 3.6],
+    "species":      ["setosa", "setosa", "setosa", "setosa", "setosa"]
+}
+df = pd.DataFrame(data)
+
+# 2. Inspect it
+print("Shape:", df.shape)
+print("\nDtypes:\n", df.dtypes)
+print("\nInfo:")
+df.info()
+print("\nDescribe:\n", df.describe())
+
+# 3. Convert to NumPy (features only)
+X = df[["sepal_length", "sepal_width"]].to_numpy()
+print("\nX shape:", X.shape)
+print("X dtype:", X.dtype)</code></pre>
+
+  <p>Expected output: <code>X shape: (5, 2)</code>, <code>X dtype: float64</code>.</p>
+
+  <h2>Key Takeaways</h2>
+
+  <ol>
+    <li>A DataFrame = labeled columns (Series) sharing a row index</li>
+    <li>Columns can have different dtypes; rows are aligned by index</li>
+    <li>Use <code>df.info()</code> first on new data — it's your diagnostic dashboard</li>
+    <li>Convert to NumPy with <code>.to_numpy()</code> for model input</li>
+    <li>Column order matters — be explicit with <code>columns=[...]</code></li>
+  </ol>
+
+  <h2>Reference Links</h2>
+  <a href="../reference/01-dataframe-anatomy.html" class="reference-link">Anatomy Reference</a>
+  <a href="../reference/02-creation-methods.html" class="reference-link">Creation Methods</a>
+  <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html" class="reference-link" target="_blank">Official API</a>
+
+  <div class="teacher-reminder">
+    <p><strong>Stuck? Confused?</strong> Ask me anything — I'm your teacher. Want to go deeper on any concept, see more examples, or try a variation of the exercise? Just say the word.</p>
+  </div>
+
+  <script>
+    function setupQuiz(quizId, feedbackId, correctAnswer, explanation) {
+      const quiz = document.getElementById(quizId);
+      const feedback = document.getElementById(feedbackId);
+      const options = quiz.querySelectorAll('.quiz-option');
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const input = opt.querySelector('input');
+          input.checked = true;
+          const selected = input.value;
+          options.forEach(o => o.classList.remove('correct', 'incorrect'));
+          if (selected === correctAnswer) {
+            opt.classList.add('correct');
+            feedback.className = 'quiz-feedback show correct';
+            feedback.innerHTML = `<strong>Correct!</strong> ${explanation}`;
+          } else {
+            opt.classList.add('incorrect');
+            feedback.className = 'quiz-feedback show incorrect';
+            feedback.innerHTML = `<strong>Not quite.</strong> ${explanation}`;
+          }
+        });
+      });
+    }
+
+    setupQuiz('quiz1', 'fb1', 'b',
+      'Each DataFrame column is a Series, which wraps a 1D NumPy array. This is why column operations are vectorized and fast.');
+
+    setupQuiz('quiz2', 'fb2', 'c',
+      '<code>df.info()</code> shows the concise summary including non-null counts and dtypes. <code>describe()</code> only shows statistics for numeric columns by default.');
+
+    setupQuiz('quiz3', 'fb3', 'b',
+      '<code>df.to_numpy()</code> is preferred — it\'s explicit, handles extension arrays correctly, and lets you specify <code>dtype</code> and <code>na_value</code>. <code>.values</code> is legacy and can behave unexpectedly with nullable dtypes.');
+  </script>
+</body>
+</html>
